@@ -1,47 +1,50 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace WindowsFormsApp1
 {
+    class CommonQuery : TableBeh{
+        public DataTable getTable(string query)
+        {
+            if (query == null)
+                query = "select 'wrong table!'";
+
+            DBlink link = new DBlink();
+            MySqlConnection connection = link.open_connection();
+            MySqlCommand sCommand = new MySqlCommand(query, connection);
+
+            var reader = sCommand.ExecuteReader();
+            DataTable sTable = new DataTable();
+            sTable.Load(reader);
+            link.close_connection();
+            return sTable;
+        }
+    }
     class Dimcomission
     {
-        private int comission_id;
-        private int tank_id;
-        private DateTime date_of_eval;
-        private bool is_accepted;
-        private string reason;
-        private MySqlDataReader data;
+        private int comission_id { get; set; }
+        private int tank_id { get; set; }
+        private DateTime date_of_eval { get; set; }
+        private bool is_accepted { get; set; }
+        private string reason { get; set; }
+        private MySqlDataReader data { get; set; }
         private List<string> data_o = new List<string>();
+        MySqlConnection connection;
 
-
-        public void getStrings(MySqlConnection connection)
+        public Dimcomission(){}
+        public Dimcomission(int comission_id, int tank_id, DateTime date_of_eval, bool is_accepted, string reason)
         {
-            string sql = "SELECT * from dimcomission";
-            // объект для выполнения SQL-запроса
-            MySqlCommand command = new MySqlCommand(sql, connection);
-            // выполняем запрос и получаем ответ
-            this.data = command.ExecuteReader();
-            this.data_o.Add(String.Format("{0,30}|{1,10}|{2,30}|{3,30}|{4,30}", "comission_id", "tank_id", "date_of_eval", "is_accepted", "reason"));
-        }
-
-        public List<string> editWindowRows()
-        {
-            while (this.data.Read()) // построчно считываем данные
-            {
-                this.comission_id = data.GetInt16(0);
-                this.tank_id = data.GetInt16(1);
-                this.date_of_eval = data.GetDateTime(2);
-                this.is_accepted = data.GetBoolean(3);
-                this.reason = data.GetString(4);
-
-                data_o.Add(String.Format("{0,30}|{1,10}|{2,30}|{3,30}|{4,30}", comission_id, tank_id, date_of_eval, is_accepted, reason));
-            }
-
-            return data_o;
+            this.comission_id = comission_id;
+            this.tank_id = tank_id;
+            this.date_of_eval = date_of_eval;
+            this.is_accepted = is_accepted;
+            this.reason = reason;
         }
     }
 }

@@ -9,10 +9,21 @@ namespace WindowsFormsApp1
 {
     class DBlink
     {
-        MySqlConnection connection = new MySqlConnection("server=localhost;port=3306;username=root;password=1234;database=tank_ft");
+        private string server = "localhost";
+        private string port = "3306";
+        private string username = "root";
+        private string password = "1234";
+        private string database = "tank_ft";
+        MySqlConnection connection;
+        private void getConnection()
+        {
 
+            this.connection = new MySqlConnection("server="+server+";port="+port+";username="+username+";password="+password+";database="+database);
+            //return connection;
+        }
         public MySqlConnection open_connection()
         {
+            getConnection();
             if (connection.State == System.Data.ConnectionState.Closed)
             {
                 connection.Open();
@@ -23,12 +34,10 @@ namespace WindowsFormsApp1
         public void close_connection()
         {
             if (connection.State == System.Data.ConnectionState.Open)
+            {
                 connection.Close();
-        }
-
-        public MySqlConnection GetConnection()
-        {
-            return connection;
+                Console.WriteLine("Отключено");
+            }
         }
     }
 }
