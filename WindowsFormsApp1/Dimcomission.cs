@@ -30,42 +30,50 @@ namespace WindowsFormsApp1
         }
         public string deleteRow(string query)
         {
+            connection = link.open_connection();
             string result;
-            try
-            {
-                connection = link.open_connection();
+
+               try
+               {
                 command = new MySqlCommand(query, connection);
                 int rowAffected = command.ExecuteNonQuery();
                 result = "Удалено строк: " + rowAffected.ToString();
-            } catch (Exception e)
-            {
+               } catch (Exception e)
+               {
                 result = e.ToString();
-            }
-            finally
-            {
-                link.close_connection();
-            }
+               }
+
+            link.close_connection();
             return result;
         }
 
-        public string updateRow(string query)
+        public string updateRow(string tableName, string alterField, string keyField, string newField, string keyValue)
         {
+            connection = link.open_connection();
             string result;
-            try
-            {
-                connection = link.open_connection();
-                command = new MySqlCommand(query);
-                int rowAffected = command.ExecuteNonQuery();
-                result = "Строка успешно обновлена";
-            }
-            catch (Exception e)
-            {
-                result = e.ToString();
-            }
-            finally
-            {
-                link.close_connection();
-            }
+            string query = "update @tableName set @alterField = @newField where @keyField = @keyValue";
+            string[] param = new string[] { "tableName", "alterField", "keyField", "newField", "keyValue" };
+
+                try
+                {
+                Console.WriteLine(query);
+                command = new MySqlCommand(query, connection);
+
+                for (int i = 0; i < 5; i++)
+                    {
+                        command.Parameters.Add(new MySqlParameter("@" + param[i], param[i]));
+                    }
+
+                    int rowAffected = command.ExecuteNonQuery();
+                    result = "Строка успешно обновлена";
+                }
+                catch (Exception e)
+                {
+                    result = e.ToString();
+                }
+
+            link.close_connection();
+            Console.WriteLine(result);
             return result;
         }
     }

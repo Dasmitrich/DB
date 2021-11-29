@@ -44,6 +44,7 @@ namespace WindowsFormsApp1
             this.comboBox4 = new System.Windows.Forms.ComboBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.textBox5 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -83,6 +84,7 @@ namespace WindowsFormsApp1
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(339, 24);
             this.comboBox1.TabIndex = 4;
+            this.comboBox1.Text = "Выберите таблицу";
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // textBox1
@@ -97,7 +99,7 @@ namespace WindowsFormsApp1
             // textBox2
             // 
             this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox2.Location = new System.Drawing.Point(30, 99);
+            this.textBox2.Location = new System.Drawing.Point(29, 99);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(339, 66);
@@ -105,7 +107,7 @@ namespace WindowsFormsApp1
             // 
             // add_data_button
             // 
-            this.add_data_button.Location = new System.Drawing.Point(391, 99);
+            this.add_data_button.Location = new System.Drawing.Point(392, 102);
             this.add_data_button.Name = "add_data_button";
             this.add_data_button.Size = new System.Drawing.Size(122, 23);
             this.add_data_button.TabIndex = 7;
@@ -115,11 +117,11 @@ namespace WindowsFormsApp1
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(389, 138);
-            this.label1.MaximumSize = new System.Drawing.Size(170, 50);
-            this.label1.MinimumSize = new System.Drawing.Size(130, 10);
+            this.label1.Location = new System.Drawing.Point(372, 128);
+            this.label1.MaximumSize = new System.Drawing.Size(160, 40);
+            this.label1.MinimumSize = new System.Drawing.Size(160, 40);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(130, 13);
+            this.label1.Size = new System.Drawing.Size(160, 40);
             this.label1.TabIndex = 8;
             // 
             // delete_button
@@ -150,13 +152,16 @@ namespace WindowsFormsApp1
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(145, 24);
             this.comboBox2.TabIndex = 11;
+            this.comboBox2.Text = "Поле изменения";
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
             // textBox3
             // 
             this.textBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox3.Location = new System.Drawing.Point(538, 143);
+            this.textBox3.Location = new System.Drawing.Point(538, 132);
+            this.textBox3.Multiline = true;
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(313, 22);
+            this.textBox3.Size = new System.Drawing.Size(145, 41);
             this.textBox3.TabIndex = 13;
             // 
             // comboBox4
@@ -167,6 +172,8 @@ namespace WindowsFormsApp1
             this.comboBox4.Name = "comboBox4";
             this.comboBox4.Size = new System.Drawing.Size(145, 24);
             this.comboBox4.TabIndex = 14;
+            this.comboBox4.Text = "Ключевое поле";
+            this.comboBox4.SelectedIndexChanged += new System.EventHandler(this.comboBox4_SelectedIndexChanged);
             // 
             // textBox4
             // 
@@ -180,16 +187,28 @@ namespace WindowsFormsApp1
             // 
             this.comboBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(702, 102);
+            this.comboBox3.Location = new System.Drawing.Point(703, 102);
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(149, 24);
             this.comboBox3.TabIndex = 16;
+            this.comboBox3.Text = "Ключевое поле";
+            this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
+            // 
+            // textBox5
+            // 
+            this.textBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBox5.Location = new System.Drawing.Point(702, 132);
+            this.textBox5.Multiline = true;
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(149, 41);
+            this.textBox5.TabIndex = 17;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(885, 450);
+            this.Controls.Add(this.textBox5);
             this.Controls.Add(this.comboBox3);
             this.Controls.Add(this.textBox4);
             this.Controls.Add(this.comboBox4);
@@ -231,6 +250,7 @@ namespace WindowsFormsApp1
         private System.Windows.Forms.ComboBox comboBox4;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.TextBox textBox5;
     }
 }
 
