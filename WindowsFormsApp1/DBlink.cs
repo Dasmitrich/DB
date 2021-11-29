@@ -13,7 +13,7 @@ namespace WindowsFormsApp1
         private string port = "3306";
         private string username = "root";
         private string password = "1234";
-        private string database = "tank_ft";
+        private string database = "tank_fc";
         MySqlConnection connection;
         private void getConnection()
         {

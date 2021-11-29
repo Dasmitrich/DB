@@ -10,20 +10,63 @@ using System.Windows.Forms;
 namespace WindowsFormsApp1
 {
     class CommonQuery : TableBeh{
+        private MySqlCommand command;
+        private MySqlConnection connection;
+        private DBlink link = new DBlink();
+
         public DataTable getTable(string query)
         {
             if (query == null)
                 query = "select 'wrong table!'";
 
-            DBlink link = new DBlink();
-            MySqlConnection connection = link.open_connection();
-            MySqlCommand sCommand = new MySqlCommand(query, connection);
+            connection = link.open_connection();
+            command = new MySqlCommand(query, connection);
 
-            var reader = sCommand.ExecuteReader();
-            DataTable sTable = new DataTable();
-            sTable.Load(reader);
+            var reader = command.ExecuteReader();
+            DataTable table = new DataTable();
+            table.Load(reader);
             link.close_connection();
-            return sTable;
+            return table;
+        }
+        public string deleteRow(string query)
+        {
+            string result;
+            try
+            {
+                connection = link.open_connection();
+                command = new MySqlCommand(query, connection);
+                int rowAffected = command.ExecuteNonQuery();
+                result = "Удалено строк: " + rowAffected.ToString();
+            } catch (Exception e)
+            {
+                result = e.ToString();
+            }
+            finally
+            {
+                link.close_connection();
+            }
+            return result;
+        }
+
+        public string updateRow(string query)
+        {
+            string result;
+            try
+            {
+                connection = link.open_connection();
+                command = new MySqlCommand(query);
+                int rowAffected = command.ExecuteNonQuery();
+                result = "Строка успешно обновлена";
+            }
+            catch (Exception e)
+            {
+                result = e.ToString();
+            }
+            finally
+            {
+                link.close_connection();
+            }
+            return result;
         }
     }
     class Dimcomission
