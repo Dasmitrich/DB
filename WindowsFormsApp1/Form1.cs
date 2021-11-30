@@ -17,14 +17,24 @@ namespace WindowsFormsApp1
         private DataTable table;
         private List<string> boxfiller = new List<string> { "Dimcomission", "FctManufacturedtank", "Dimadministration", "Dimfactory",
         "Dimmachinetool", "Dimmonthplan", "Dimtankmodel", "Dimwarehouse", "Dimworkers", "Dimworkspace"};
+        private string[] comboBox = new string[5];
+        string tableName;
+        string alterColumn;
+        string newField;
+        string keyValue;
+        string updateKeyColumn;
+        string deleteKeyValue;
+
+
         public Form1()
-        {         
+        {
             InitializeComponent();
             boxfiller.Sort();
             comboBox1.Items.AddRange(boxfiller.ToArray());
             label1.Text = "Здесь будут отображены\nдополнительные\nрезультаты запросов";
         }
 
+        //кнопка "Выбрать табицу"
         private void button1_Click(object sender, EventArgs e)
         {
             if (comboBox1.SelectedItem != null)
@@ -34,7 +44,7 @@ namespace WindowsFormsApp1
                     this.columns.Clear();
                 clear_Boxes();
 
-                this.table = cq.getTable("select * from " + comboBox1.SelectedItem.ToString());
+                this.table = cq.getTable("select * from " + comboBox[1]);
                 dataGridView1.DataSource = table;
                 dataGridView1.ReadOnly = true;
 
@@ -52,19 +62,13 @@ namespace WindowsFormsApp1
             }
         }
 
-        private void clear_Boxes()
-        {
-                comboBox4.Items.Clear();
-                comboBox3.Items.Clear();
-                comboBox2.Items.Clear();
-        }
-
+        //кнопка свой запрос
         private void button2_Click(object sender, EventArgs e)
         {
             if (!String.IsNullOrEmpty(textBox1.Text))
             {
                 CommonQuery cq = new CommonQuery();
-                table = cq.getTable(textBox1.Text);
+                //table = cq.getTable(textBox1.Text);
                 dataGridView1.DataSource = table;
                 dataGridView1.ReadOnly = true;
 
@@ -73,60 +77,66 @@ namespace WindowsFormsApp1
             }
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
+        //кнопка удаления строк
         private void button4_Click(object sender, EventArgs e)
         {
-            if (comboBox1.SelectedItem != null && comboBox4.SelectedItem != null && textBox4 != null)
+            if (comboBox[1] != null && comboBox[4] != null && textBox4 != null)
             {
                 CommonQuery cq = new CommonQuery();
-                string tableName = comboBox1.SelectedItem.ToString();
-                string keyField = comboBox4.SelectedItem.ToString();
+                string tableName = comboBox[1];
+                string delete = comboBox[4];
                 string keyValue = textBox4.Text;
-                string result = cq.deleteRow("delete from " + tableName + " where " + keyField + " = " + keyValue);
+
+                string result = cq.deleteRow("delete from " + tableName + " where " + deleteKeyValue + " = " + keyValue);
                 label1.Text = result;
             }
         }
 
+        //кнопка обновления строк
         private void button5_Click(object sender, EventArgs e)
         {
-            if (comboBox1.SelectedItem != null && comboBox2.SelectedItem != null && comboBox3.SelectedItem != null && textBox3 != null && textBox5 != null)
+            Console.WriteLine("btn clicked");
+            alterColumn = comboBox[2];
+            updateKeyColumn = comboBox[3];
+
+            if (comboBox1.SelectedItem != null && comboBox[2] != null && comboBox[3] != null && textBox3.TextLength > 0 && textBox5.TextLength > 0)
             {
-                CommonQuery cq = new CommonQuery();
-                string tableName = comboBox1.SelectedItem.ToString();
-                string alterField = comboBox2.SelectedItem.ToString();
-                string keyField = comboBox3.SelectedItem.ToString();
-                string newField = textBox3.Text;
-                string keyValue = textBox5.Text;
-                
-                string result = cq.updateRow(tableName, alterField, keyField, newField, keyValue);
-                label1.Text = result;
+                tableName = comboBox1.SelectedItem.ToString();
+                newField = textBox3.Text;
+                keyValue = textBox5.Text;
+                //string query = "update " + tableName + " set " + alterColumn + " = " + "'" + newField + "'" + " where " + updateKeyColumn + " = " + keyValue;
+            string result = new CommonQuery().updateRow(tableName, alterColumn, newField, updateKeyColumn, keyValue);
+            label1.Text = result;
             }
+            //Console.WriteLine(query);
         }
 
+        //чистка комбобоксов перед каждым новым селектом
+        private void clear_Boxes()
+        {
+            comboBox4.Items.Clear();
+            comboBox3.Items.Clear();
+            comboBox2.Items.Clear();
+        }
+
+        //комбобоксы
         private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-        }
-
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
+            comboBox[4] = comboBox4.SelectedItem.ToString();
         }
 
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            comboBox[3] = comboBox3.SelectedItem.ToString();
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-                comboBox4.Items.Clear();
-                comboBox3.Items.Clear();
-                comboBox2.Items.Clear();
+            comboBox[2] = comboBox2.SelectedItem.ToString();
+        }
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            comboBox[1] = comboBox1.SelectedItem.ToString();
         }
     }
 }
