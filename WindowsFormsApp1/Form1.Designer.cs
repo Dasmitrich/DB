@@ -113,6 +113,7 @@ namespace WindowsFormsApp1
             this.add_data_button.TabIndex = 7;
             this.add_data_button.Text = "Добавить данные";
             this.add_data_button.UseVisualStyleBackColor = true;
+            this.add_data_button.Click += new System.EventHandler(this.add_data_button_Click);
             // 
             // label1
             // 

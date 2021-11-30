@@ -37,25 +37,28 @@ namespace WindowsFormsApp1
         //кнопка "Выбрать табицу"
         private void button1_Click(object sender, EventArgs e)
         {
-            if (comboBox1.SelectedItem != null)
+            if (comboBox[1] != null)
             {
-                CommonQuery cq = new CommonQuery();
                 if(columns != null)
-                    this.columns.Clear();
+                    columns.Clear();
                 clear_Boxes();
 
-                this.table = cq.getTable("select * from " + comboBox[1]);
+                //получаем данные из бд
+                CommonQuery cq = new CommonQuery();
+                table = cq.editTable("select * from " + comboBox[1]);
                 dataGridView1.DataSource = table;
                 dataGridView1.ReadOnly = true;
 
                 dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
                 dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
+                //добавляем столбцы таблицы в комбобоксы
                 columns = new List<string>();
                 foreach (DataColumn d in table.Columns)
                 {
                     columns.Add(d.ToString());
                 }
+                //обновляем связанные комбобоксы
                 comboBox4.Items.AddRange(columns.ToArray());
                 comboBox3.Items.AddRange(columns.ToArray());
                 comboBox2.Items.AddRange(columns.ToArray());
@@ -68,7 +71,8 @@ namespace WindowsFormsApp1
             if (!String.IsNullOrEmpty(textBox1.Text))
             {
                 CommonQuery cq = new CommonQuery();
-                //table = cq.getTable(textBox1.Text);
+                table = cq.userQuery(textBox1.Text);
+
                 dataGridView1.DataSource = table;
                 dataGridView1.ReadOnly = true;
 
@@ -84,7 +88,7 @@ namespace WindowsFormsApp1
             {
                 CommonQuery cq = new CommonQuery();
                 string tableName = comboBox[1];
-                string delete = comboBox[4];
+                deleteKeyValue = comboBox[4];
                 string keyValue = textBox4.Text;
 
                 string result = cq.deleteRow("delete from " + tableName + " where " + deleteKeyValue + " = " + keyValue);
@@ -95,7 +99,6 @@ namespace WindowsFormsApp1
         //кнопка обновления строк
         private void button5_Click(object sender, EventArgs e)
         {
-            Console.WriteLine("btn clicked");
             alterColumn = comboBox[2];
             updateKeyColumn = comboBox[3];
 
@@ -109,6 +112,22 @@ namespace WindowsFormsApp1
             label1.Text = result;
             }
             //Console.WriteLine(query);
+        }
+
+        //дулаем вставку записей
+        private void add_data_button_Click(object sender, EventArgs e)
+        {
+            if (comboBox[1] != null && textBox2 != null)
+            {
+                //получаем данные из бд
+                CommonQuery cq = new CommonQuery();
+                table = cq.editTable("insert into " + comboBox[1] + " values (" + textBox2.Text + ")");
+                dataGridView1.DataSource = table;
+                dataGridView1.ReadOnly = true;
+
+                dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+                dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            }
         }
 
         //чистка комбобоксов перед каждым новым селектом
