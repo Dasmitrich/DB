@@ -11,19 +11,14 @@ namespace WindowsFormsApp1
 {
     class DBlink
     {
-        private readonly string jsonFilePath = "Properties.json";
+        private readonly string jsonPropertiesPath = "Properties.json";
         private string jsonFile;
-        /*private string server = "localhost";
-        private string port = "3306";
-        private string username = "root";
-        private string password = "1234";
-        private string database = "tank_fc";*/
         private MySqlConnection connection;
         List<DBsettings> settings;
 
         public DBlink()
         {
-            StreamReader sr = new StreamReader(jsonFilePath);
+            StreamReader sr = new StreamReader(jsonPropertiesPath);
             jsonFile = sr.ReadToEnd();
             Console.WriteLine(jsonFile);
             settings = JsonConvert.DeserializeObject<List<DBsettings>>(jsonFile);
@@ -38,15 +33,15 @@ namespace WindowsFormsApp1
             public string database { get; set; }
         }
 
-        private void getConnection()
+        private void setConnection()
         {
-            Console.WriteLine(settings.Count);
+            Console.WriteLine(settings[0].server, settings[0].password);
             connection = new MySqlConnection("server="+settings[0].server+";port="+ settings[0].port + ";username="+ settings[0].username + ";password="+ settings[0].password + ";database="+ settings[0].database);
             //return connection;
         }
         public MySqlConnection open_connection()
         {
-            getConnection();
+            setConnection();
             if (connection.State == System.Data.ConnectionState.Closed)
             {
                 connection.Open();

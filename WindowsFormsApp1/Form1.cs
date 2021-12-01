@@ -1,9 +1,11 @@
 ﻿using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,11 +15,12 @@ namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
     {
+        private readonly string tablesPath = "Tables.txt";
         private List<string> columns;
         private DataTable table;
-        private List<string> boxfiller = new List<string> { "Dimcomission", "FctManufacturedtank", "Dimadministration", "Dimfactory",
-        "Dimmachinetool", "Dimmonthplan", "Dimtankmodel", "Dimwarehouse", "Dimworkers", "Dimworkspace"};
         private string[] comboBox = new string[5];
+        private string[] boxFiller;
+
         string tableName;
         string alterColumn;
         string newField;
@@ -25,12 +28,14 @@ namespace WindowsFormsApp1
         string updateKeyColumn;
         string deleteKeyValue;
 
-
         public Form1()
         {
             InitializeComponent();
-            boxfiller.Sort();
-            comboBox1.Items.AddRange(boxfiller.ToArray());
+            StreamReader sr = new StreamReader(tablesPath);
+            string rtables = sr.ReadToEnd();
+            boxFiller = rtables.Split(',');
+
+            comboBox1.Items.AddRange(boxFiller);
             label1.Text = "Здесь будут отображены\nдополнительные\nрезультаты запросов";
         }
 
