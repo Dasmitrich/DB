@@ -20,7 +20,7 @@ namespace WindowsFormsApp1
         {
             StreamReader sr = new StreamReader(jsonPropertiesPath);
             jsonFile = sr.ReadToEnd();
-            Console.WriteLine(jsonFile);
+            //Console.WriteLine(jsonFile);
             settings = JsonConvert.DeserializeObject<List<DBsettings>>(jsonFile);
         }
 

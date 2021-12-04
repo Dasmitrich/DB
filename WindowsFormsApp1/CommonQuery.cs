@@ -13,7 +13,7 @@ namespace WindowsFormsApp1
         static int m = 0;
         private MySqlCommand command;
         private MySqlConnection connection;
-        private DBlink link = new DBlink();        
+        private DBlink link = new DBlink();   
 
         //метод получения строк таблицы
         public DataTable editTable(string query)
@@ -72,14 +72,16 @@ namespace WindowsFormsApp1
 
                try
                {
+                Console.WriteLine(query);
                 command = new MySqlCommand(query, connection);
                 int rowAffected = command.ExecuteNonQuery();
                 result = "Удалено строк: " + rowAffected.ToString();
-               } catch (Exception e)
+               } 
+                catch (Exception e)
                {
                 result = "Error";
                 messageErr(e);
-            }
+               }
 
             link.close_connection();
             return result;

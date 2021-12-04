@@ -35,6 +35,11 @@ namespace WindowsFormsApp1
             string rtables = sr.ReadToEnd();
             boxFiller = rtables.Split(',');
 
+            for(int i=0; i<boxFiller.Length; i++)
+            {
+                boxFiller[i] = boxFiller[i].ToLower();
+            }
+
             comboBox1.Items.AddRange(boxFiller);
             label1.Text = "Здесь будут отображены\nдополнительные\nрезультаты запросов";
         }
@@ -91,10 +96,12 @@ namespace WindowsFormsApp1
         {
             if (comboBox[1] != null && comboBox[4] != null && textBox4 != null)
             {
-                CommonQuery cq = new CommonQuery();
-                string tableName = comboBox[1];
+                tableName = comboBox[1];
                 deleteKeyValue = comboBox[4];
-                string keyValue = textBox4.Text;
+                keyValue = textBox4.Text;
+
+                Console.WriteLine("delete from " + tableName + " where " + deleteKeyValue + " = " + keyValue);
+                CommonQuery cq = new CommonQuery();
 
                 string result = cq.deleteRow("delete from " + tableName + " where " + deleteKeyValue + " = " + keyValue);
                 label1.Text = result;
@@ -122,7 +129,7 @@ namespace WindowsFormsApp1
         //дулаем вставку записей
         private void add_data_button_Click(object sender, EventArgs e)
         {
-            if (comboBox[1] != null && textBox2 != null)
+            if (comboBox[1] != null && textBox2.TextLength > 0)
             {
                 //получаем данные из бд
                 CommonQuery cq = new CommonQuery();
