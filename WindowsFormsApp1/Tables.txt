@@ -1,0 +1,10 @@
+﻿Dimcomission,
+FctManufacturedtank,
+Dimadministration,
+Dimfactory,
+Dimmachinetool,
+Dimmonthplan,
+Dimtankmodel,
+Dimwarehouse,
+Dimworkers,
+Dimworkspace

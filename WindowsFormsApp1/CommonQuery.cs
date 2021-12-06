@@ -1,10 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WindowsFormsApp1
@@ -76,6 +72,7 @@ namespace WindowsFormsApp1
                 command = new MySqlCommand(query, connection);
                 int rowAffected = command.ExecuteNonQuery();
                 result = "Удалено строк: " + rowAffected.ToString();
+                
                } 
                 catch (Exception e)
                {
@@ -118,25 +115,4 @@ namespace WindowsFormsApp1
             MessageBox.Show(e.ToString(), "Ошибка!");
         }
     }
-    /*class Dimcomission
-    {
-        private int comission_id { get; set; }
-        private int tank_id { get; set; }
-        private DateTime date_of_eval { get; set; }
-        private bool is_accepted { get; set; }
-        private string reason { get; set; }
-        private MySqlDataReader data { get; set; }
-        private List<string> data_o = new List<string>();
-        MySqlConnection connection;
-
-        public Dimcomission(){}
-        public Dimcomission(int comission_id, int tank_id, DateTime date_of_eval, bool is_accepted, string reason)
-        {
-            this.comission_id = comission_id;
-            this.tank_id = tank_id;
-            this.date_of_eval = date_of_eval;
-            this.is_accepted = is_accepted;
-            this.reason = reason;
-        }
-    }*/
 }
