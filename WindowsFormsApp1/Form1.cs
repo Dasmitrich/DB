@@ -18,7 +18,15 @@ namespace WindowsFormsApp1
         private readonly string tablesPath = "Tables.txt";
         private List<string> columns;
         private DataTable table;
-        private string[] comboBox = new string[5];//тут хранятся считанные значения 4-х комбобоксов
+        private string[] comboBox = new string[6];//тут хранятся считанные значения 4-х комбобоксов
+        Dictionary<string, string> Box5Value = new Dictionary<string, string> {
+        {"Нет", "нет"},
+        {"Макс. значение", "max"},
+        {"Мин. значение", "min"},
+        {"Среднее значение", "avg"},
+        {"Узнать количество", "count"},
+        {"Суммировать", "sum"}
+            };//словарь для агрегатных функций
         private List<string> boxFiller = new List<string>();//тут хранятся все таблицы
 
         string tableName;
@@ -30,7 +38,9 @@ namespace WindowsFormsApp1
 
         public Form1()
         {
+            
             InitializeComponent();
+            //читаем названия таблиц
             StreamReader sr = new StreamReader(tablesPath);
             string rtables = sr.ReadToEnd();
             boxFiller.AddRange(rtables.Split(','));
@@ -40,7 +50,9 @@ namespace WindowsFormsApp1
                 boxFiller[i] = boxFiller[i].ToLower();
             }
 
-            comboBox1.Items.AddRange(boxFiller.ToArray());
+            comboBox1.Items.AddRange(boxFiller.ToArray());//заполняем комбобокс для таблиц
+            comboBox5.Items.AddRange(new List<string>(Box5Value.Keys).ToArray());//зааполняем комбобокс для агрегатных функций на основе ключей словаря
+            comboBox[5] = "нет";
             label1.Text = "Здесь будут отображены\nдополнительные\nрезультаты запросов";
         }
 
@@ -49,35 +61,50 @@ namespace WindowsFormsApp1
         {
             if (comboBox[1] != null)
             {
-                if(columns != null)
+                label1.Text = "";
+                if (columns != null)
                     columns.Clear();
-                clear_Boxes();
+                if(comboBox[5] == "нет")
+                    clear_Boxes();
 
                 //получаем данные из бд
-                updateForm();
-
-                //добавляем столбцы таблицы в комбобоксы
-                columns = new List<string>();
-                foreach (DataColumn d in table.Columns)
+                if (comboBox[5] == "нет")
                 {
-                    columns.Add(d.ToString());
+                    updateForm("select * from " + comboBox[1]);
                 }
-                //обновляем связанные комбобоксы
-                comboBox4.Items.AddRange(columns.ToArray());
-                comboBox3.Items.AddRange(columns.ToArray());
-                comboBox2.Items.AddRange(columns.ToArray());
+                else if(comboBox[4] != null && comboBox[1] != null)
+                {
+                    updateForm("select " + comboBox[5] + "(" + comboBox[4] + ") from " + comboBox[1]);
+                } else
+                    label1.Text = "Недоcстаточно атрибутов\nзапроса";
+                
+                //обновляяем столбцы таблицах комбобоксов
+                columns = new List<string>();
+                    foreach (DataColumn d in table.Columns)
+                    {
+                        columns.Add(d.ToString());
+                    }
+                //обновляем связанные комбобоксы  при отсутствии агрегатных функций
+                if (comboBox[5] == "нет")
+                {
+                    comboBox4.Items.AddRange(columns.ToArray());
+                    comboBox3.Items.AddRange(columns.ToArray());
+                    comboBox2.Items.AddRange(columns.ToArray());
+                }
             }
+            else
+                label1.Text = "Недостаточно атрибутов\nзапроса";
         }
 
         //кнопка группировки строк
         private void group_button_Click(object sender, EventArgs e)
         {
-            if (comboBox[4] != null)
+            if (comboBox[1] != null && comboBox[5] != null && comboBox[5] != "нет" && comboBox[2] != null && comboBox[3] != null )
             {
-                CommonQuery cq = new CommonQuery();
-                table = cq.editTable("select * from " + comboBox[1] + " group by " + comboBox[4]);
-                updateForm();
-            }
+                label1.Text = "";
+                updateForm("select " + comboBox[2] + "," + comboBox[5]+ "("+ comboBox[3] + ") from " + comboBox[1] + " group by " + comboBox[2]);
+            } else
+                label1.Text = "Недостаточно атрибутов\nзапроса";
         }
 
         //кнопка свой запрос
@@ -85,9 +112,10 @@ namespace WindowsFormsApp1
         {
             if (!String.IsNullOrEmpty(textBox1.Text))
             {
+                label1.Text = "";
                 CommonQuery cq = new CommonQuery();
                 table = cq.userQuery(textBox1.Text);
-                updateForm();
+                updateForm("select * from " + comboBox[1]);
             }
         }
 
@@ -96,17 +124,18 @@ namespace WindowsFormsApp1
         {
             if (comboBox[1] != null && comboBox[4] != null && textBox4 != null)
             {
+                label1.Text = "";
                 tableName = comboBox[1];
                 deleteKeyValue = comboBox[4];
                 keyValue = textBox4.Text;
-
-                Console.WriteLine("delete from " + tableName + " where " + deleteKeyValue + " = " + keyValue);
                 CommonQuery cq = new CommonQuery();
 
-                string result = cq.deleteRow("delete from " + tableName + " where " + deleteKeyValue + " = " + keyValue);
+                string result = cq.deleteRow(tableName, deleteKeyValue, keyValue);
                 label1.Text = result;
-                updateForm();
+                updateForm("select * from " + comboBox[1]);
             }
+            else
+                label1.Text = "Недостаточно атрибутов\nзапроса";
         }
 
         //кнопка обновления строк
@@ -117,15 +146,17 @@ namespace WindowsFormsApp1
 
             if (comboBox1.SelectedItem != null && comboBox[2] != null && comboBox[3] != null && textBox3.TextLength > 0 && textBox5.TextLength > 0)
             {
+                label1.Text = "";
                 tableName = comboBox1.SelectedItem.ToString();
                 newField = textBox3.Text;
                 keyValue = textBox5.Text;
                 //string query = "update " + tableName + " set " + alterColumn + " = " + "'" + newField + "'" + " where " + updateKeyColumn + " = " + keyValue;
             string result = new CommonQuery().updateRow(tableName, alterColumn, newField, updateKeyColumn, keyValue);
-                
-            label1.Text = result;
+            label1.Text = result;                
+            updateForm("select * from " + comboBox[1]);
             }
-            updateForm();
+            else
+                label1.Text = "Недостаточно атрибутов\nзапроса";
             //Console.WriteLine(query);
         }
 
@@ -134,19 +165,22 @@ namespace WindowsFormsApp1
         {
             if (comboBox[1] != null && textBox2.TextLength > 0)
             {
+                label1.Text = "";
                 //получаем данные из бд
                 CommonQuery cq = new CommonQuery();
                 table = cq.editTable("insert into " + comboBox[1] + " values (" + textBox2.Text + ")");
-                updateForm();
+                updateForm("select * from " + comboBox[1]);
             }
+            else
+                label1.Text = "Недостаточно атрибутов\nзапроса";
         }
 
         //обновляем форму
-        private void updateForm()
+        private void updateForm(string query)
         {
 
             CommonQuery cq = new CommonQuery();
-            table = cq.editTable("select * from " + comboBox[1]);
+            table = cq.editTable(query);
             dataGridView1.DataSource = table;
             dataGridView1.ReadOnly = true;
 
@@ -164,6 +198,10 @@ namespace WindowsFormsApp1
 
 
         //комбобоксы
+        private void comboBox5_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            comboBox[5] = Box5Value[comboBox5.SelectedItem.ToString()];
+        }
         private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
         {
             comboBox[4] = comboBox4.SelectedItem.ToString();

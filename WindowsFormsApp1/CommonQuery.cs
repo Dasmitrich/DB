@@ -44,7 +44,7 @@ namespace WindowsFormsApp1
 
             DataTable table = new DataTable();
             connection = link.open_connection();
-
+            Console.WriteLine(query);
             try
             {
                 command = new MySqlCommand(query, connection);
@@ -61,13 +61,14 @@ namespace WindowsFormsApp1
         }
 
         //метод удаления строки
-        public string deleteRow(string query)
+        public string deleteRow(string tableName, string deleteColumn, string deleteKeyValue)
         {
             connection = link.open_connection();
             string result;
 
                try
                {
+                string query = "delete from " + tableName + " where " + deleteColumn + " = " + deleteKeyValue;
                 Console.WriteLine(query);
                 command = new MySqlCommand(query, connection);
                 int rowAffected = command.ExecuteNonQuery();

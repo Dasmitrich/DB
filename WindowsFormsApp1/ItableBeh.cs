@@ -11,7 +11,7 @@ namespace WindowsFormsApp1
     interface ItableBeh
     {
         DataTable editTable(string query);
-        string deleteRow(string query);
+        string deleteRow(string tableName, string deleteColumn, string deleteKeyValue);
         string updateRow(string tableName, string alterField, string keyField, string newField, string keyValue);
     }
 }
