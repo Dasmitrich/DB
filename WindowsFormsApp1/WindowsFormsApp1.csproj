@@ -55,7 +55,6 @@
   <ItemGroup>
     <Compile Include="DBlink.cs" />
     <Compile Include="CommonQuery.cs" />
-    <Compile Include="Fctmanufacturedtank.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -93,9 +92,5 @@
     <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties tables_1json__JsonSchema="https://appsemble.app/api.json" />
-    </VisualStudio>
-  </ProjectExtensions>
+  <ProjectExtensions />
 </Project>

@@ -1,22 +1,14 @@
-﻿using MySql.Data.MySqlClient;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
     {
-        private readonly string tablesPath = "Tables.txt";
         private List<string> columns;
+        private List<string> rows;
         private DataTable table;
         private string[] comboBox = new string[6];//тут хранятся считанные значения 4-х комбобоксов
         Dictionary<string, string> Box5Value = new Dictionary<string, string> {
@@ -26,8 +18,8 @@ namespace WindowsFormsApp1
         {"Среднее значение", "avg"},
         {"Узнать количество", "count"},
         {"Суммировать", "sum"}
-            };//словарь для агрегатных функций
-        private List<string> boxFiller = new List<string>();//тут хранятся все таблицы
+        };//словарь для агрегатных функций
+        CommonQuery cq = new CommonQuery();
 
         string tableName;
         string alterColumn;
@@ -41,16 +33,16 @@ namespace WindowsFormsApp1
             
             InitializeComponent();
             //читаем названия таблиц
-            StreamReader sr = new StreamReader(tablesPath);
-            string rtables = sr.ReadToEnd();
-            boxFiller.AddRange(rtables.Split(','));
+            
+            table = cq.editTable("show tables");
+            rows = new List<string>();
 
-            for(int i = 0; i < boxFiller.Count; i++)
+            foreach (DataRow d in table.Rows)
             {
-                boxFiller[i] = boxFiller[i].ToLower();
+                rows.Add(d.Field<string>(0));
             }
 
-            comboBox1.Items.AddRange(boxFiller.ToArray());//заполняем комбобокс для таблиц
+            comboBox1.Items.AddRange(rows.ToArray()); //заполняем комбобокс для таблиц
             comboBox5.Items.AddRange(new List<string>(Box5Value.Keys).ToArray());//зааполняем комбобокс для агрегатных функций на основе ключей словаря
             comboBox[5] = "нет";
             label1.Text = "Здесь будут отображены\nдополнительные\nрезультаты запросов";
@@ -80,10 +72,10 @@ namespace WindowsFormsApp1
                 
                 //обновляяем столбцы таблицах комбобоксов
                 columns = new List<string>();
-                    foreach (DataColumn d in table.Columns)
-                    {
-                        columns.Add(d.ToString());
-                    }
+                foreach (DataColumn d in table.Columns)
+                {
+                    columns.Add(d.ToString());
+                }
                 //обновляем связанные комбобоксы  при отсутствии агрегатных функций
                 if (comboBox[5] == "нет")
                 {
@@ -113,7 +105,6 @@ namespace WindowsFormsApp1
             if (!String.IsNullOrEmpty(textBox1.Text))
             {
                 label1.Text = "";
-                CommonQuery cq = new CommonQuery();
                 table = cq.userQuery(textBox1.Text);
                 updateForm("select * from " + comboBox[1]);
             }
@@ -128,7 +119,6 @@ namespace WindowsFormsApp1
                 tableName = comboBox[1];
                 deleteKeyValue = comboBox[4];
                 keyValue = textBox4.Text;
-                CommonQuery cq = new CommonQuery();
 
                 string result = cq.deleteRow(tableName, deleteKeyValue, keyValue);
                 label1.Text = result;
@@ -151,7 +141,7 @@ namespace WindowsFormsApp1
                 newField = textBox3.Text;
                 keyValue = textBox5.Text;
                 //string query = "update " + tableName + " set " + alterColumn + " = " + "'" + newField + "'" + " where " + updateKeyColumn + " = " + keyValue;
-            string result = new CommonQuery().updateRow(tableName, alterColumn, newField, updateKeyColumn, keyValue);
+            string result = cq.updateRow(tableName, alterColumn, newField, updateKeyColumn, keyValue);
             label1.Text = result;                
             updateForm("select * from " + comboBox[1]);
             }
@@ -167,7 +157,6 @@ namespace WindowsFormsApp1
             {
                 label1.Text = "";
                 //получаем данные из бд
-                CommonQuery cq = new CommonQuery();
                 table = cq.editTable("insert into " + comboBox[1] + " values (" + textBox2.Text + ")");
                 updateForm("select * from " + comboBox[1]);
             }
@@ -178,8 +167,6 @@ namespace WindowsFormsApp1
         //обновляем форму
         private void updateForm(string query)
         {
-
-            CommonQuery cq = new CommonQuery();
             table = cq.editTable(query);
             dataGridView1.DataSource = table;
             dataGridView1.ReadOnly = true;
