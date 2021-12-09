@@ -65,10 +65,10 @@ namespace WindowsFormsApp1
         {
             connection = link.open_connection();
             string result;
+            string query = "delete from " + tableName + " where " + deleteColumn + " = " + deleteKeyValue;
 
-               try
+            try
                {
-                string query = "delete from " + tableName + " where " + deleteColumn + " = " + deleteKeyValue;
                 Console.WriteLine(query);
                 command = new MySqlCommand(query, connection);
                 int rowAffected = command.ExecuteNonQuery();
@@ -82,7 +82,7 @@ namespace WindowsFormsApp1
                }
 
             link.close_connection();
-            return result;
+            return "done";
         }
 
         //метод обновления строки

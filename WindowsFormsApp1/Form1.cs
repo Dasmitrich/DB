@@ -105,8 +105,7 @@ namespace WindowsFormsApp1
             if (!String.IsNullOrEmpty(textBox1.Text))
             {
                 label1.Text = "";
-                table = cq.userQuery(textBox1.Text);
-                updateForm("select * from " + comboBox[1]);
+                updateForm(textBox1.Text);
             }
         }
 
