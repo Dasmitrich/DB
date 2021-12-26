@@ -39,7 +39,7 @@ namespace WindowsFormsApp1
 
             foreach (DataRow d in table.Rows)
             {
-                rows.Add(d.Field<string>(0));
+                rows.Add(d.Field<string>(0));//нулевой столбец из таблицы
             }
 
             comboBox1.Items.AddRange(rows.ToArray()); //заполняем комбобокс для таблиц

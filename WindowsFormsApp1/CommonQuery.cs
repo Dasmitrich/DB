@@ -113,7 +113,7 @@ namespace WindowsFormsApp1
 
         private void messageErr(Exception e)
         {
-            MessageBox.Show(e.ToString(), "Ошибка!");
+            MessageBox.Show(e.Message, "Ошибка!");
         }
     }
 }

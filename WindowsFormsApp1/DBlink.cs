@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.IO;
+using System.Windows.Forms;
 
 namespace WindowsFormsApp1
 {
@@ -34,15 +35,20 @@ namespace WindowsFormsApp1
         {
             Console.WriteLine(settings[0].server, settings[0].password);
             connection = new MySqlConnection("server="+settings[0].server+";port="+ settings[0].port + ";username="+ settings[0].username + ";password="+ settings[0].password + ";database="+ settings[0].database);
+            Console.WriteLine(connection.State);
             //return connection;
         }
         public MySqlConnection open_connection()
         {
             setConnection();
-            if (connection.State == System.Data.ConnectionState.Closed)
+            try
             {
                 connection.Open();
                 Console.WriteLine("Подключено");
+            }
+            catch(Exception e)
+            {
+                //MessageBox.Show(e.Message, "Ошибка!");
             }
             return connection;
         }
